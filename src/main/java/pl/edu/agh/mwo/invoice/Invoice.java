@@ -23,7 +23,7 @@ public class Invoice {
 		}
 	}
 
-	public BigDecimal getSubtotal() {
+	public BigDecimal getTotalNetPrice() {
 		BigDecimal subtotal = BigDecimal.ZERO;
 		for (Product product : this.products) {
 			subtotal = subtotal.add(product.getPrice());
