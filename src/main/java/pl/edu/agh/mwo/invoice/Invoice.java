@@ -1,6 +1,7 @@
 package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 
 import pl.edu.agh.mwo.invoice.product.Product;
@@ -9,22 +10,35 @@ public class Invoice {
 	private Collection<Product> products;
 
 	public void addProduct(Product product) {
-		// TODO: implement
+		this.products.add(product);
 	}
 
 	public void addProduct(Product product, Integer quantity) {
-		// TODO: implement
+		for(int i=0; i < quantity; i++ )
+			this.products.add(product);
 	}
 
 	public BigDecimal getSubtotal() {
-		return null;
+		BigDecimal subtotal = BigDecimal.ZERO;
+		for(Product product : this.products) {
+			subtotal.add(product.getPrice());
+		}
+		return subtotal;
 	}
 
 	public BigDecimal getTax() {
-		return null;
+		BigDecimal tax = BigDecimal.ZERO;
+		for(Product product : products) {
+			tax.add(product.getPriceWithTax().subtract(product.getPrice()));
+		}
+		return tax;
 	}
 
 	public BigDecimal getTotal() {
-		return null;
+		BigDecimal total = BigDecimal.ZERO;
+		for(Product product : products) {
+			total.add(product.getPriceWithTax());
+		}
+		return total;
 	}
 }
