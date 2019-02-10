@@ -132,4 +132,52 @@ public class InvoiceTest {
 			Assert.assertThat(number1, Matchers.lessThan(number2));	
 		}
 	}
+	
+	@Test
+	public void testPrintedInvoiceHasNumber() {
+		String printedInvoice = invoice.getAsText();
+		String number = invoice.getNumber().toString();
+		Assert.assertThat(
+				printedInvoice,
+				Matchers.containsString("nr " + number)
+				);
+	}
+	
+	@Test
+	public void testPrintedInvoiceContainsAddedProduct() {
+		// 2x kubek - price: 10
+		invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 2);
+		// 3x kozi serek - price: 30
+		invoice.addProduct(new DairyProduct("Kozi Serek", new BigDecimal("10")), 3);
+		// 1000x pinezka - price: 10
+		invoice.addProduct(new OtherProduct("Pinezka", new BigDecimal("0.01")), 1000);
+		
+		String printedInvoice = invoice.getAsText();
+		Assert.assertThat(printedInvoice,Matchers.containsString("Kubek 2 5.00"));
+		Assert.assertThat(printedInvoice,Matchers.containsString("Kozi Serek 3 10.00"));
+		Assert.assertThat(printedInvoice,Matchers.containsString("Pinezka 1000 0.01"));
+	}
+	
+	@Test
+	public void testPrintedInvoiceHasEachProductInNewLine() {
+		// 3x kozi serek - price: 30
+		invoice.addProduct(new DairyProduct("Kozi Serek", new BigDecimal("10")), 3);
+		// 1000x pinezka - price: 10
+		invoice.addProduct(new OtherProduct("Pinezka", new BigDecimal("0.01")), 1000);
+		
+		String printedInvoice = invoice.getAsText();
+		
+		Assert.assertThat(printedInvoice, Matchers.containsString("Kozi Serek 3 10.00\nPinezka 1000 0.01"));
+	}
+	
+	@Test
+	public void testPrintedInvoiceHasCorrectPositionsQuantity() {
+		// 3x kozi serek - price: 30
+		invoice.addProduct(new DairyProduct("Kozi Serek", new BigDecimal("10")), 3);
+		// 1000x pinezka - price: 10
+		invoice.addProduct(new OtherProduct("Pinezka", new BigDecimal("0.01")), 1000);
+		
+		String printedInvoice = invoice.getAsText();
+		Assert.assertThat(printedInvoice, Matchers.containsString("Liczba pozycji: 2"));
+	}
 }
