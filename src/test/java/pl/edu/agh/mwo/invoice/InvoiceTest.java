@@ -180,4 +180,14 @@ public class InvoiceTest {
 		String printedInvoice = invoice.getAsText();
 		Assert.assertThat(printedInvoice, Matchers.containsString("Liczba pozycji: 2"));
 	}
+	
+	@Test
+	public void testAddingTheSameProductTwice() {
+		invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")));
+		invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")));
+		
+		String printedInvoice = invoice.getAsText();
+		Assert.assertThat(printedInvoice, Matchers.containsString("Chleb 2 5.00"));
+		
+	}
 }
